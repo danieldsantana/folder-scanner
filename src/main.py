@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
+from pathlib import Path
 
 
 def choose_scan_type():
@@ -18,11 +19,22 @@ def choose_scan_type():
 
 
 def scan_folders(folder_path):
-    print("scan_folders")
+    folder = Path(folder_path)
+
+    print(f"\nScanning folders in: {folder}")
+
+    for path in folder.rglob("*"):
+        if path.is_dir():
+            print(path)
 
 
 def scan_folders_and_files(folder_path):
-    print("scan_folders_and_files")
+    folder = Path(folder_path)
+
+    print(f"\nScanning folders and files in: {folder}")
+
+    for path in folder.rglob("*"):
+        print(path)
 
 
 def exit_program():
