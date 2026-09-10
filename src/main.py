@@ -1,6 +1,17 @@
 import tkinter as tk
 from tkinter import filedialog
 from pathlib import Path
+import sys
+
+
+IGNORED_DIRECTORIES = {
+    ".git",
+    ".venv",
+    "venv",
+    "__pycache__",
+    ".idea",
+    ".vscode",
+}
 
 
 def choose_scan_type():
@@ -19,18 +30,31 @@ def choose_scan_type():
 
 
 def build_tree(folder_path, include_files=False):
-    root = Path(folder_path)
-    lines = [root.name]
+    root_path = Path(folder_path)
+
+    # Use a fallback name for filesystem roots such as C:\.
+    root_name = root_path.name or str(root_path)
+
+    lines = [root_name]
 
     def add_directory(directory, prefix=""):
-        entries = []
+        try:
+            entries = []
 
-        for entry in directory.iterdir():
-            if entry.is_dir():
-                entries.append(entry)
+            for entry in directory.iterdir():
+                if entry.is_symlink():
+                    continue
 
-            elif include_files and entry.is_file():
-                entries.append(entry)
+                if entry.is_dir():
+                    if entry.name not in IGNORED_DIRECTORIES:
+                        entries.append(entry)
+
+                elif include_files and entry.is_file():
+                    entries.append(entry)
+
+        except PermissionError:
+            lines.append(prefix + "└── [Access denied]")
+            return
 
         entries.sort(key=lambda path: (path.is_file(), path.name.lower()))
 
@@ -42,7 +66,12 @@ def build_tree(folder_path, include_files=False):
             else:
                 connector = "├── "
 
-            lines.append(prefix + connector + entry.name)
+            name = entry.name
+
+            if entry.is_dir():
+                name += "/"
+
+            lines.append(prefix + connector + name)
 
             if entry.is_dir():
                 if is_last:
@@ -52,17 +81,24 @@ def build_tree(folder_path, include_files=False):
 
                 add_directory(entry, new_prefix)
 
-    add_directory(root)
+    add_directory(root_path)
 
     return lines
 
 
 def save_tree(lines, folder_path):
-    output_folder = Path("output")
+    script_directory = Path(__file__).resolve().parent
+    output_folder = script_directory.parent / "output"
     output_folder.mkdir(exist_ok=True)
 
-    folder_name = Path(folder_path).name
+    folder_name = Path(folder_path).name or Path(folder_path).anchor
     output_file = output_folder / f"{folder_name}_tree.txt"
+
+    counter = 1
+
+    while output_file.exists():
+        output_file = output_folder / f"{folder_name}_tree_{counter}.txt"
+        counter += 1
 
     output_file.write_text("\n".join(lines), encoding="utf-8")
 
@@ -89,14 +125,14 @@ def scan_folders_and_files(folder_path):
 
 def exit_program():
     print("Exiting program")
-    exit()
+    sys.exit()
 
 
 print("Folder Scanner")
 print("Select a folder to scan...")
 
-root = tk.Tk()
-root.withdraw()
+tk_root = tk.Tk()
+tk_root.withdraw()
 
 folder_path = filedialog.askdirectory(title="Select a folder")
 
