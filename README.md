@@ -8,22 +8,24 @@ I often need to inspect the structure of folders and files, and I usually end up
 
 This project is meant to be a reusable tool that I can keep around and use whenever I need to scan a directory.
 
-## Planned features
+## Features
 
-* [ ] Ask for the directory to scan
-* [ ] Choose what to scan
-
-  * [ ] Folders only
-  * [ ] Folders and files
-* [ ] Scan the directory recursively
-* [ ] Generate a tree representation of the directory
-* [ ] Export the result as TXT
+- Ask for the directory to scan
+- Choose what to scan
+  - Folders only
+  - Folders and files
+- Scan the directory recursively
+- Generate a tree representation of the directory
+- Ignore common development directories
+- Handle inaccessible directories
+- Export the result as TXT
+- Avoid overwriting existing results
 
 ## Technologies
 
-* Python
-* Git
+- Python
+- Git
 
 ## Status
 
-Work in progress.
+Done.
