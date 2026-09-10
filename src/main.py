@@ -57,11 +57,25 @@ def build_tree(folder_path, include_files=False):
     return lines
 
 
+def save_tree(lines, folder_path):
+    output_folder = Path("output")
+    output_folder.mkdir(exist_ok=True)
+
+    folder_name = Path(folder_path).name
+    output_file = output_folder / f"{folder_name}_tree.txt"
+
+    output_file.write_text("\n".join(lines), encoding="utf-8")
+
+    print(f"\nTree saved to: {output_file}")
+
+
 def scan_folders(folder_path):
     lines = build_tree(folder_path, include_files=False)
 
     for line in lines:
         print(line)
+
+    save_tree(lines, folder_path)
 
 
 def scan_folders_and_files(folder_path):
@@ -69,6 +83,8 @@ def scan_folders_and_files(folder_path):
 
     for line in lines:
         print(line)
+
+    save_tree(lines, folder_path)
 
 
 def exit_program():
