@@ -1,6 +1,6 @@
 # Folder Scanner
 
-A simple command-line tool to scan the structure of a directory and export the results in different formats.
+A simple command-line tool to scan the structure of a directory and export the result as a text file.
 
 ## About
 
@@ -10,19 +10,14 @@ This project is meant to be a reusable tool that I can keep around and use whene
 
 ## Planned features
 
-* [ ] Ask for the directory path
-* [ ] Scan folders recursively
-* [ ] Scan files recursively
-* [ ] Choose between folders, files, or both
-* [ ] Select which information to collect
+* [ ] Ask for the directory to scan
+* [ ] Choose what to scan
 
-  * [ ] Name
-  * [ ] Extension
-  * [ ] Size
-  * [ ] Path
-* [ ] Export results as TXT
-* [ ] Export results as CSV
-* [ ] Export results as XML
+  * [ ] Folders only
+  * [ ] Folders and files
+* [ ] Scan the directory recursively
+* [ ] Generate a tree representation of the directory
+* [ ] Export the result as TXT
 
 ## Technologies
 
